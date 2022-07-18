@@ -1,0 +1,30 @@
+--CREATE TABLE identification (
+--  user_id VARCHAR(20) PRIMARY KEY,
+--  product_id integer NOT NULL, 
+--  identification_date real NOT NULL); 
+--CREATE TABLE table_with_personal_data (user_id VARCHAR(20) NOT NULL, pers_key_id integer NOT NULL, pers_value VARCHAR(20) NOT NULL, PRIMARY KEY (user_id, pers_key_id)); 
+--INSERT INTO identification (user_id, product_id, identification_date) VALUES('101009', 1, julianday('2022-07-06'));
+
+
+--INSERT INTO table_with_personal_data (user_id, pers_key_id, pers_value) VALUES('101009', 3, 'Gach');
+
+
+--SELECT * FROM identification WHERE product_id <> 1 AND (julianday('now') - identification_date) > 7 AND user_id = 
+--(SELECT dat1.user_id FROM table_with_personal_data as dat1 JOIN table_with_personal_data as dat2 
+--WHERE dat1.pers_value = dat2.pers_value AND dat1.user_id <> dat2.user_id 
+--GROUP by dat1.user_id 
+--HAVING COUNT(dat1.pers_key_id) = 3)
+
+
+
+CREATE TEMPORARY TABLE TT4 AS
+SELECT * FROM table_with_personal_data as dat1 JOIN table_with_personal_data as dat2 
+WHERE dat1.pers_value = dat2.pers_value AND dat1.user_id <> dat2.user_id 
+GROUP by dat1.user_id 
+HAVING COUNT(dat1.pers_key_id) = 5;
+
+SELECT COUNT(TT4.user_id) FROM TT4 JOIN identification ON TT4.user_id = identification.user_id 
+WHERE (julianday('now') - identification_date) > 7 AND product_id <> 1
+
+
+--SELECT * FROM table_with_personal_data
